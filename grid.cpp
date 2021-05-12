@@ -129,8 +129,6 @@ void grid::evol() {
 		}
 	}
 
-	
-
 	/*for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			cout << "(" << j << ";" << i << ")" << "s:" << table[i][j].getstate()<<"  ";

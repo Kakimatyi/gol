@@ -18,8 +18,12 @@ private:
 
 public:
 
+	cell** gettable() {
+		return table;
+	}
+
 	//init 2d tomb ami a palya lesz, ebben a tombben lesznek tarolva az egyes cellak peldanyai 2d-ben
-	//ennek majd irni constructor(alap 10x10 ures tabla) es destructor (tabla torlo fv-t is!!!!!!!!!!)
+	//ennek majd irni constructor(alap 10x10 ures tabla) EZ NEM JÓ KÉRDEZNI!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	grid() {
 		height = 10;
 		width = 10;
@@ -62,6 +66,13 @@ public:
 				}
 			}
 
+	}
+
+	~grid() {
+		for (int i = 0; i < width; ++i) {
+			delete[] table[i];
+		}
+		delete[] table;
 	}
 
 	//glider jobb alsó sarkának kezdeti pozi megadása
