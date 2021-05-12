@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void grid::glider(vector<cell> cells, int glidx, int glidy) {
+void grid::gliderbonyi(vector<cell> cells, int glidx, int glidy) {
 
 	int gx = glidx, gy = glidy; //glider jobb also sarkanak koordinatai								//001
 																									//101    ez egy glider
@@ -22,11 +22,11 @@ void grid::glider(vector<cell> cells, int glidx, int glidy) {
 		}
 	}
 	for (int i = 0; i < cells.size(); i++) {
-		cout << cells[i].getx() <<" "<< cells[i].gety()<<endl;
+		//cout << cells[i].getx() <<" "<< cells[i].gety()<<endl;
 	}
 }
 
-void grid::evolfun(vector<cell> cells, int height, int width) {
+/*void grid::evolfun(vector<cell> cells, int height, int width) {
 
 	vector<cell> temp; // a változtatott állapotú sejtek lementése ide, hogy a kör végén átírja õket
 
@@ -63,5 +63,89 @@ void grid::evolfun(vector<cell> cells, int height, int width) {
 			}
 		}
 	}
+}*/
+
+void grid::evol() {
+	//cout << "i= " << width << " j=" << height<<endl;
+	struct coord { // a változtatott állapotú sejtek koordinátáinak tárolása ebben a structban
+		int x, y;
+	}; 
+
+	vector<coord> temp; // az egész táblát újra lementeni memóriaigényes lenne, így elég csak a változtatottakat egy vektorba menteni
+
+	//ez végigmeny a tábla elemein szomszéd után keresve
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			
+			int szomsz = 0;
+
+				int startw=j-1, vegw=j+2; //ezekig ellenoriz vizszintesen [][j] a masodik az x koord
+			
+
+				//szelen levokre mas vonatkozik
+				if (j == 0) { startw = 0; }			//ha bal szelen
+				if (j == width - 1) { vegw = width; } //ha jobb szelen
+				
+
+				//felso szomszedok
+				if (i > 0) {
+					for (int k = startw; k < vegw; k++) {
+						if (table[i - 1][k].getstate() == true) { szomsz++; /*cout << "szk:" << i + 1 << "," << k << " ";*/ }
+					}
+									}
+
+				//also szomszedok
+				if (i < height-1) {
+					for (int k = startw; k < vegw; k++) {
+						
+						if (table[i + 1][k].getstate()) {  szomsz++; /*cout << "szk:" << i + 1 << "," << k << " ";*/ }
+					}
+					
+				}
+
+				//oldalso szomszedok
+				//if (table[i - 1][j].getstate() || table[i + 1][j].getstate()) szomsz++;
+				if (j > 0 && table[i][j - 1].getstate()) { szomsz++;} 
+				if(j < width - 2 && table[i][j + 1].getstate()) { szomsz++;}
+
+				
+			//szamolt szomszedok alapjan lemeti a változtatott állapotú sejteket ///////////////////////////
+			if (szomsz == 3 && !table[i][j].getstate()) {
+				
+				coord c;
+				c.x = j;
+				c.y = i;
+				temp.push_back(c); //elég ennyi, és akkor csak az ellenkezõjére változtatja a state-t
+			}
+
+			if ((szomsz < 2 || szomsz>3) && table[i][j].getstate()) {
+				
+				coord c;
+				c.x = j;
+				c.y = i;
+				temp.push_back(c);
+			}
+			//cout <<" "<< j <<" "<<i<<" sz:"<<szomsz<<endl;
+		}
+	}
+
+	
+
+	/*for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			cout << "(" << j << ";" << i << ")" << "s:" << table[i][j].getstate()<<"  ";
+		}cout << endl;
+	}*/
+
+	for (int i = 0; i < temp.size(); i++) {
+		table[temp[i].y][temp[i].x].flipstate();
+	}
 }
+
+
+
+	
+
+
+
 

@@ -17,10 +17,15 @@ public:
 
 	int getx()const { return x; }
 	int gety()const { return y; }
-	int getstate()const { return state; }
+	bool getstate()const { return state; }
 	void setx(int xcoord) { x = xcoord; }
 	void sety(int ycoord) { y = ycoord; }
 	void setstate(bool newstate) { state = newstate; }
+	void flipstate(){
+		if (state) { setstate(0); }
+		else { setstate(1); }
+
+	}
 
 	//temprol atiro fv ide
 
