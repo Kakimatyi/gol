@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 
 	
 	/* rajzok */
-	/*int x, y, r;
+	int x, y, r;
 	r = 50;
 
 	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
@@ -65,15 +65,15 @@ int main(int argc, char *argv[]) {
 	rectangle.h = 50;
 	SDL_RenderFillRect(renderer, &rectangle);
 	SDL_RenderPresent(renderer);
-	*/
+	
 
 	/* az elvegzett rajzolasok a kepernyore */
 	SDL_RenderPresent(renderer);
 
 	/* varunk a kilepesre */
-	/*SDL_Event ev;
+	SDL_Event ev;
 	while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
-	}*/
+	}
 
 	/* ablak bezarasa */
 	SDL_Quit();
@@ -86,5 +86,7 @@ int main(int argc, char *argv[]) {
 
 	tabla.glider(cells,3,3);
 	tabla.printcells(cells,10,10);
+
+	cout << "heeeeeeeelllllllooooooo";
 	return 0;
 }
