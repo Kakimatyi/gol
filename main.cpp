@@ -49,26 +49,27 @@ void drawGrid(SDL_Renderer *r, int SCREEN_WIDTH, int SCREEN_HEIGHT, int CELL_SIZ
 void drawCells(SDL_Renderer *r, cell **table, int height, int width, int CELL_SIZE) {
 	// Define cell width/height
 	SDL_Rect cell;
-	cell.w =  + 1; // egy meretu a racs
+	cell.w = CELL_SIZE + 1; // egy meretu a racs
 	cell.h = CELL_SIZE + 1;
 
-	// Draw living cells
-	int cx, cy;
-	for (cy = 0; cy < height; cy++) {
-		for (cx = 0; cx < width; cx++) {
-			if (table[cy][cx].getstate()) {
-				// Set cell x/y pos
-				cell.x = cx * CELL_SIZE;
-				cell.y = cy * CELL_SIZE;
+	// elo cellak kirajzolasa
+	
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			if (table[i][j].getstate()) {
 
-				SDL_SetRenderDrawColor(r, 255, 255, 255, 1);
+				// kirajzolando cella xy koord
+				cell.x = j * CELL_SIZE;
+				cell.y = i * CELL_SIZE;
+
+				SDL_SetRenderDrawColor(r, 255, 200, 255, 1);
 				SDL_RenderFillRect(r, &cell);
 			}
 		}
 	}
 }
 
-//wtf miert ide kell
+//miert ide kell
 ostream& operator<<(ostream &os, const grid table) {
 	table.operatorprint(os);
 	return os;
@@ -125,23 +126,23 @@ int main(int argc, char *argv[]) {
 	/* az elvegzett rajzolasok a kepernyore */
 
 	
+	
+	grid table(20, 20);	
+	
 
-	grid table(20, 20);
-	cell** board = table.gettable();
-
-	while (1) {
-		drawGrid(renderer, 500, 500, 10);
-		drawCells(renderer, table.gettable(), 50, 50, 10);
-		SDL_RenderPresent(renderer);
-		table.evol();
-
-		/* varunk a kilepesre */
-		SDL_Event ev;
+		/* ez ketyeg, varunk a kilepesre */
+		/*SDL_Event ev;
 		while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
-		}
-		SDL_Delay(500);
-		SDL_RenderClear(renderer);
-	}
+			drawGrid(renderer, 200, 200, 10);
+			drawCells(renderer, table.gettable(), 20, 20, 10);
+			SDL_RenderPresent(renderer);
+			table.evol();
+			SDL_Delay(500);
+			SDL_RenderClear(renderer);
+		}*/
+		
+
+	
 
 	/* ablak bezarasa */
 	SDL_Quit();
@@ -155,11 +156,10 @@ int main(int argc, char *argv[]) {
 	while (1) {
 		tabla.print();
 		tabla.evol();
-		Sleep(800);
+		Sleep(200);
 		system("CLS");
 	}*/
 
-	
 
 	return 0;
 }
