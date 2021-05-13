@@ -6,7 +6,6 @@
 #include <windows.h>
 #include<vector>
 #include "cell.h"
-#include"evol.h"
 #include"grid.h"
 
 using namespace std;
@@ -69,8 +68,11 @@ void drawCells(SDL_Renderer *r, cell **table, int height, int width, int CELL_SI
 	}
 }
 
-
-
+//wtf miert ide kell
+ostream& operator<<(ostream &os, const grid table) {
+	table.operatorprint(os);
+	return os;
+}
 
 int main(int argc, char *argv[]) {
 	/* SDL inicializálása és ablak megnyitása */
@@ -122,38 +124,42 @@ int main(int argc, char *argv[]) {
 
 	/* az elvegzett rajzolasok a kepernyore */
 
-	drawGrid(renderer, 500, 500, 10);
+	
 
 	grid table(20, 20);
 	cell** board = table.gettable();
 
-	while (1==2) {
-		drawCells(renderer, table.gettable(), 20, 20, 10);
+	while (1) {
+		drawGrid(renderer, 500, 500, 10);
+		drawCells(renderer, table.gettable(), 50, 50, 10);
 		SDL_RenderPresent(renderer);
 		table.evol();
 
 		/* varunk a kilepesre */
-		/*SDL_Event ev;
+		SDL_Event ev;
 		while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
 		}
 		SDL_Delay(500);
-		SDL_RenderClear(renderer);*/
+		SDL_RenderClear(renderer);
 	}
 
 	/* ablak bezarasa */
 	SDL_Quit();
-///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////// konzolos kiírás
 
-	int a, b;
+
+	/*int a, b;
 	cin >> a >> b;
 	grid tabla(a,b);
 	
 	while (1) {
 		tabla.print();
 		tabla.evol();
-		Sleep(500);
+		Sleep(800);
 		system("CLS");
-	}
+	}*/
+
+	
 
 	return 0;
 }

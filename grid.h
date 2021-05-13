@@ -116,8 +116,5 @@ public:
 	}
 };
 
-ostream& operator<<(ostream &os, const grid table) {
-	table.operatorprint(os);
-	return os;
-}
+
 #endif
