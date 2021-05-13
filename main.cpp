@@ -50,8 +50,8 @@ void drawGrid(SDL_Renderer *r, int SCREEN_WIDTH, int SCREEN_HEIGHT, int CELL_SIZ
 void drawCells(SDL_Renderer *r, cell **table, int height, int width, int CELL_SIZE) {
 	// Define cell width/height
 	SDL_Rect cell;
-	cell.w =  + 1; // Same size as one cell +1 so it covers the grid line fully
-	cell.h = CELL_SIZE + 1; // Same size as one cell +1 so it covers the grid line fully
+	cell.w =  + 1; // egy meretu a racs
+	cell.h = CELL_SIZE + 1;
 
 	// Draw living cells
 	int cx, cy;
@@ -127,34 +127,33 @@ int main(int argc, char *argv[]) {
 	grid table(20, 20);
 	cell** board = table.gettable();
 
-	while (1) {
+	while (1==2) {
 		drawCells(renderer, table.gettable(), 20, 20, 10);
 		SDL_RenderPresent(renderer);
 		table.evol();
 
 		/* varunk a kilepesre */
-		SDL_Event ev;
+		/*SDL_Event ev;
 		while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
 		}
 		SDL_Delay(500);
-		SDL_RenderClear(renderer);
+		SDL_RenderClear(renderer);*/
 	}
 
 	/* ablak bezarasa */
 	SDL_Quit();
 ///////////////////////////////////////////////////////////////////////////////////
 
-	/*int a, b;
+	int a, b;
 	cin >> a >> b;
-	grid kaki(a,b);
+	grid tabla(a,b);
 	
 	while (1) {
-		kaki.print();
-		kaki.evol();
-		int k;
+		tabla.print();
+		tabla.evol();
 		Sleep(500);
 		system("CLS");
-	}*/
+	}
 
 	return 0;
 }

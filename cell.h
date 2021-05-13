@@ -1,25 +1,22 @@
-#pragma once
+#ifndef CELL_H
+#define CELL_H
 #include<iostream>
 using namespace std;
+
 
 //osztaly a sejtek koordinatainak tarolasara egyedileg
 
 class cell
 {
 private:
-	int x; //koordináták
-	int y;
+	
 	bool state; //élõ vagy holt
 
 public:
 	cell() { state = 0; }
-	//~cell() { delete x; delete y; }
+	//~cell() { }
 
-	int getx()const { return x; }
-	int gety()const { return y; }
 	bool getstate()const { return state; }
-	void setx(int xcoord) { x = xcoord; }
-	void sety(int ycoord) { y = ycoord; }
 	void setstate(bool newstate) { state = newstate; }
 	void flipstate(){
 		if (state) { setstate(0); }
@@ -27,18 +24,17 @@ public:
 
 	}
 
-	//temprol atiro fv ide
-
 
 	/*void operatorprint(ostream &os) const {
-		os << x;
+		os << state;
 	}*/
 
-};
-
-/*ostream & operator<<(ostream &os, const cell &c) {
+}; 
+#endif
+/*ostream & operator<<(ostream &os, const cell c) {
 	c.operatorprint(os);
 	return os;
 }*/
+
 
 

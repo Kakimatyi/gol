@@ -1,6 +1,7 @@
-#pragma once
+#ifndef GRID_H
+#define GRID_H
+
 #include"cell.h"
-#include"evol.h"
 #include<vector>
 #include<iostream>
 
@@ -77,9 +78,9 @@ public:
 
 	//glider jobb alsó sarkának kezdeti pozi megadása
 	// ehhez lehet kivételkezelést írni
-	void gliderbonyi(vector<cell> cells, int glidx, int glidy); //a vektorba betolt egy 3x3 as cells-t glider alakban
+	/*void gliderbonyi(vector<cell> cells, int glidx, int glidy); //a vektorba betolt egy 3x3 as cells-t glider alakban*/
 
-	void printcells(vector<cell> cells, int height, int width) const {
+	/*void printcells(vector<cell> cells, int height, int width) const {
 
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
@@ -91,7 +92,7 @@ public:
 				}
 			}
 		}
-	}
+	}*/
 
 	void evolfun(vector<cell> cells, int height, int width);
 
@@ -115,7 +116,8 @@ public:
 	}
 };
 
-/*ostream& operator<<(ostream &os, const grid &table) {
+ostream& operator<<(ostream &os, const grid table) {
 	table.operatorprint(os);
 	return os;
-}*/
+}
+#endif
