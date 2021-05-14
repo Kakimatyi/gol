@@ -1,6 +1,7 @@
-#pragma once
+#ifndef GRID_H
+#define GRID_H
+
 #include"cell.h"
-#include"evol.h"
 #include<vector>
 #include<iostream>
 
@@ -18,11 +19,15 @@ private:
 
 public:
 
-	//init 2d tomb ami a palya lesz, ebben a tombben lesznek tarolva az egyes cellak peldanyai 2d-ben
-	//ennek majd irni constructor(alap 10x10 ures tabla) es destructor (tabla torlo fv-t is!!!!!!!!!!)
+	cell** gettable() const{
+		return table;
+	}
+
+	//2d tomb ami a palya lesz, ebben a tombben lesznek tarolva az egyes cellak peldanyai 2d-ben
+	//default constructor 20x20 palya gliderrel a felso sarokban
 	grid() {
-		height = 10;
-		width = 10;
+		height = 20;
+		width = 20;
 
 		//2d dinamikus tabla letrehozasa a memoriaba
 		table = new cell*[width];
@@ -33,6 +38,15 @@ public:
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				table[i][j] = nullsejt; //alapbol halott sejtet rak bele, feltolti nullakkal a tablat
+			}
+		}
+
+		//glider betöltése
+		int glidarr[3][3] = { 1,1,1,1,0,0,0,1,0 };
+
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				table[2 - i][2 - j].setstate(glidarr[i][j]);
 			}
 		}
 	}
@@ -64,11 +78,18 @@ public:
 
 	}
 
+	~grid() {
+		for (int i = 0; i < width; ++i) {
+			delete[] table[i];
+		}
+		delete[] table;
+	}
+
 	//glider jobb alsó sarkának kezdeti pozi megadása
 	// ehhez lehet kivételkezelést írni
-	void gliderbonyi(vector<cell> cells, int glidx, int glidy); //a vektorba betolt egy 3x3 as cells-t glider alakban
+	/*void gliderbonyi(vector<cell> cells, int glidx, int glidy); //a vektorba betolt egy 3x3 as cells-t glider alakban*/
 
-	void printcells(vector<cell> cells, int height, int width) const {
+	/*void printcells(vector<cell> cells, int height, int width) const {
 
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
@@ -80,7 +101,7 @@ public:
 				}
 			}
 		}
-	}
+	}*/
 
 	void evolfun(vector<cell> cells, int height, int width);
 
@@ -102,9 +123,11 @@ public:
 			}cout << endl;
 		}
 	}
+
+	void cellbeker(int x, int y) { //felhasznalo altal megadott koordinatakon elove teszi a cellat
+		table[x][y].setstate(1);
+	}
 };
 
-/*ostream& operator<<(ostream &os, const grid &table) {
-	table.operatorprint(os);
-	return os;
-}*/
+
+#endif

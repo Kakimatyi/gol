@@ -1,13 +1,10 @@
-#pragma once
-
-#include"evol.h"
 #include"grid.h"
 #include<vector>
 #include<iostream>
 
 using namespace std;
 
-void grid::gliderbonyi(vector<cell> cells, int glidx, int glidy) {
+/*void grid::gliderbonyi(vector<cell> cells, int glidx, int glidy) {
 
 	int gx = glidx, gy = glidy; //glider jobb also sarkanak koordinatai								//001
 																									//101    ez egy glider
@@ -24,7 +21,7 @@ void grid::gliderbonyi(vector<cell> cells, int glidx, int glidy) {
 	for (int i = 0; i < cells.size(); i++) {
 		//cout << cells[i].getx() <<" "<< cells[i].gety()<<endl;
 	}
-}
+}*/
 
 /*void grid::evolfun(vector<cell> cells, int height, int width) {
 
@@ -129,14 +126,13 @@ void grid::evol() {
 		}
 	}
 
-	
-
 	/*for (int i = 0; i < height; i++) {
 		for (int j = 0; j < width; j++) {
 			cout << "(" << j << ";" << i << ")" << "s:" << table[i][j].getstate()<<"  ";
 		}cout << endl;
 	}*/
 
+	//a lementett koordináták állapotának felcserélése
 	for (int i = 0; i < temp.size(); i++) {
 		table[temp[i].y][temp[i].x].flipstate();
 	}
