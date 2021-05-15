@@ -104,7 +104,7 @@ int main(int argc, char *argv[]) {
 	int height, width;
 
 	cout << "Game of Life" << endl << endl;
-	cout << "Space - pause" << endl << "jobbra nyil (->) leptet";
+	cout << "Space - pause" << endl << "jobbra nyil (->) leptet"<<endl<<endl;
 	//palya valasztas
 	do {
 		cout << "Az alapertelmezett (20x20) palyamerettel jatszik? (y/n)";
@@ -119,9 +119,10 @@ int main(int argc, char *argv[]) {
 		cout << "szelesseg: ";
 		cin >> width;
 	}
-	else { height = 10; width = 20;}
+	else { height = 20; width = 20;} //habar van def constr 20x20-as tablaval, igy egyszerubb
 
 	grid table(height, width); //ha akrja ezt lehet atirni azert itt, mert itt mar tud meretet
+	
 
 	//kezdeti allapot valasztas
 	do {
@@ -130,43 +131,46 @@ int main(int argc, char *argv[]) {
 	} while (defstate != 'y' && defstate != 'n');
 
 	//cellak bekerese
-	/*if (defstate == 'n') {
+	if (defstate == 'n') {
 		system("cls");
-
-		//a kirajzolasig ebbol abrazol
-		int** table = new int*[width];
-		for (int i = 0; i < width; i++) {
-			table[i] = new int[height];
-		}
-
 		//tabla rajzolasa, hogy lassa mit hova akar tenni
-			for (int k = 0; k < width; k++) {
+		for (int k = 0; k < width; k++) {
 
-				if (k < 9) {
-					if (k == 0) { cout << "   " << k + 1 << "  "; }
-					else { cout << k + 1 << "  "; }
+			if (k < 9) {
+				if (k == 0) { cout << "   " << k + 1 << "  "; }
+				else { cout << k + 1 << "  "; }
+			}
+			else {
+				cout << k + 1 << " ";
+			}
+		}
+		cout << endl;
+
+		//fontos, hogy table[y][x] fordittot koordinatazas van
+		for (int i = 0; i < height; i++) {
+			for (int j = 0; j < width; j++) {
+				if (j == 0) { //elso oszlop
+					if (i < 9) { if (table.getcellstate(i, j)) { cout << i + 1 << " |O |"; } else { cout << i + 1 << " |_ |"; } }
+					else { if (table.getcellstate(i, j)) { cout << i + 1 << "|O |"; } else { cout << i + 1 << "|_ |"; } }
 				}
 				else {
-					cout << k + 1 << " ";
-				}
-			}
-			cout << endl;
 
-			for (int i = 0; i < height; i++) {
-				for (int j = 0; j < width - 1; j++) {
-					if (j == 0) {
-						if (i < 9) { cout << i + 1 << " |_ |"; }
-						else { cout << i + 1 << "|_ |"; }
-					}
-					if (j == width - 1) { cout << "_ |"; }
-					else { cout << "_ |"; }
-				}cout << endl;
-			}
-			cout << endl << "Irja be az eleszteni kivant sejt koordinatait (befejezes negativ koordinataval)\n";
+					if (j == width - 1) { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+					else { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+				}
+			}cout << endl;
+		}
+			cout << endl << "Irja be az eleszteni kivant sejt koordinatait (befejezes tablan kivuli koordinataval)\n";
 			coord c;
+
 			do { 
 				//koord beir
 				cin >> c; 
+				c.x = c.x - 1;
+				c.y = c.y - 1;
+
+				if (c.x >= 0 && c.y >= 0 && c.x < width && c.y < height){ table.cellbeker(c.y, c.x); } // a kilepo koordinatak miatt
+				
 				
 			system("cls");
 			//tabla rajzolasa, hogy lassa mit hova akar tenni
@@ -182,28 +186,34 @@ int main(int argc, char *argv[]) {
 			}
 			cout << endl;
 
+			//fontos, hogy table[y][x] fordittot koordinatazas van
 			for (int i = 0; i < height; i++) {
-				for (int j = 0; j < width - 1; j++) {
-					if (j == 0) {
-						if (i < 9) { cout << i + 1 << " |_ |"; }
-						else { cout << i + 1 << "|_ |"; }
+				for (int j = 0; j < width; j++) {
+					if (j == 0) { //elso oszlop
+						if (i < 9) { if (table.getcellstate(i,j)) { cout <<i+1<< " |O |"; } else { cout << i + 1 << " |_ |"; } }
+						else { if (table.getcellstate(i, j)) { cout << i + 1 << "|O |"; } else { cout << i + 1 << "|_ |"; } }
 					}
-					if (j == width - 1) { cout << "_ |"; }
-					else { cout << "_ |"; }
+					else {
+
+						if (j == width - 1) { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+						else { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+					}
 				}cout << endl;
 			}
-			cout << endl << "Irja be az eleszteni kivant sejt koordinatait (befejezes negativ koordinataval)\n";
 
-			} while (c.x >= 0 && c.y>0);
+			cout << endl << "Irja be az eleszteni kivant sejt koordinatait (befejezes tablan kivuli koordinataval\n";
+
+			} while (c.x >= 0 && c.y>=0 && c.x < width && c.y < height);
 
 			cout << "A jatek inditasahoz nyomjon barmilyen gombot!";
-			while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT && ev.type!=SDL_KEYDOWN) {}
+			char y;
+			cin >> y;
 
 			cout << "Loading...";
 			
 			system("cls");
 			cout << "Nezze a masik ablakot!";
-	}*/
+	}
 
 
 	/* SDL inicializálása és ablak megnyitása */
@@ -250,7 +260,7 @@ int main(int argc, char *argv[]) {
 		case SDL_KEYDOWN:
 			switch (ev.key.keysym.sym)
 			{
-				case SDLK_SPACE: { //beallitja a futas bool, vagy valami enumot mint a snake-ban
+				case SDLK_SPACE: { //beallitja a run boolt
 					if (run) { run = false; }
 					else { run = true; }//ha space bill lenyomva, run flipstate
 				}

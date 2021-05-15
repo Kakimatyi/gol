@@ -19,6 +19,7 @@ private:
 
 public:
 
+	//visszaadja a tablat
 	cell** gettable() const{
 		return table;
 	}
@@ -70,11 +71,11 @@ public:
 		//glider betöltése
 		int glidarr[3][3] = { 1,1,1,1,0,0,0,1,0 };
 
-			for (int i = 0; i < 3; i++) { 
+			/*for (int i = 0; i < 3; i++) { 
 				for (int j = 0; j < 3; j++) {
 					table[2 - i][2 - j].setstate(glidarr[i][j]);
 				}
-			}
+			}*/
 
 	}
 
@@ -122,6 +123,11 @@ public:
 				cout << table[i][j].getstate();
 			}cout << endl;
 		}
+	}
+
+	//igy nem kell egy masolatot csinalnunk rola tabla1=table.gettable()-lel, amit minden korbe le kell frissiteni az eredetirol
+	bool getcellstate(int x, int y) {
+		return table[x][y].getstate();
 	}
 
 	void cellbeker(int x, int y) { //felhasznalo altal megadott koordinatakon elove teszi a cellat
