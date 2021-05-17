@@ -101,6 +101,8 @@ int main(int argc, char *argv[]) {
 	char defsize, defstate, iffile;
 	int height, width;
 
+	grid *table=NULL; // igy az ifeken belul is lehet peldanyositani
+
 	cout << "Game of Life" << endl << endl;
 	cout << "Space - pause" << endl << "jobbra nyil (->) leptet" << endl << endl;
 
@@ -109,55 +111,68 @@ int main(int argc, char *argv[]) {
 		cin >> iffile;
 	} while (iffile != 'y' && iffile != 'n');
 
-	
-	//palya valasztas
-	do {
-		cout << "Az alapertelmezett (20x20) palyamerettel jatszik? (y/n)";
-		cin >> defsize;
-	} while (defsize != 'y' && defsize != 'n');
+	if (iffile == 'y') {
+		ifstream file;
+		file.open("palya.txt");
 
-	if (defsize == 'n') {
-		cout << "Adja meg a palya mereteit!" << endl;
+		if (file.is_open()) {
+			string beolvas;
 
-		cout << "magassag: ";
-		cin >> height;
-		cout << "szelesseg: ";
-		cin >> width;
-	}
-	else { height = 20; width = 20; } //habar van def constr 20x20-as tablaval, igy egyszerubb
-	grid table(height, width); //ha akrja ezt lehet atirni azert itt, mert itt mar tud meretet
-
-	//kezdeti allapot valasztas
-	do {
-		cout << "Az alapertelmezett allapotbol indul? (y/n)";
-		cin >> defstate;
-	} while (defstate != 'y' && defstate != 'n');
-
-	//cellak bekerese
-	if (defstate == 'n') {
-
-		if (iffile == 'y') {
-			ifstream file;
-			file.open("palya.txt");
-
-			if (file.is_open()) {
-				cout << "kurva";
-				string beolvas;
-
-				int sor = 0;
-				//eloszor lemeri a palya mereteket beolvasassal
-				while (!file.eof()) {
-					file >> beolvas;
-					sor++;
-				}
-
-				height = sor; width=beolvas.size();
-				
-
+			int sor = 0;
+			//eloszor lemeri a palya mereteket beolvasassal
+			while (!file.eof()) {
+				file >> beolvas;
+				sor++;
 			}
-			else { cout << "palya.txt nem talalhato a program mappajaban"; }
+
+			height = sor+1; width = int(beolvas.size());
+			table = new grid(height, width);
+			file.close();
+
+			//most ujra vegigmegy de most be is tolti a cellakat
+			sor = 0;
+			file.open("palya.txt");
+			while (!file.eof()) {
+				file >> beolvas;
+				//cout << beolvas;
+				for (int j = 0; j < width; j++) {
+					if (beolvas[j]=='1') {
+						 //csak az eloket rakja bele a tobbi default 0
+						table->cellbeker(sor, j);
+					}
+				}
+				sor++;
+			}
 		}
-		else {
+		else { cout << "palya.txt nem talalhato a program mappajaban"; }
+	}
+	else {
+
+		//palya valasztas
+		do {
+			cout << "Az alapertelmezett (20x20) palyamerettel jatszik? (y/n)";
+			cin >> defsize;
+		} while (defsize != 'y' && defsize != 'n');
+
+		if (defsize == 'n') {
+			cout << "Adja meg a palya mereteit!" << endl;
+
+			cout << "magassag: ";
+			cin >> height;
+			cout << "szelesseg: ";
+			cin >> width;
+		}
+		else { height = 20; width = 20; } //habar van def constr 20x20-as tablaval, igy egyszerubb
+		table = new grid(height, width); //igy ha beolvas akkor ezt lehet torolni ha mar nem kell
+
+		//kezdeti allapot valasztas
+		do {
+			cout << "Az alapertelmezett allapotbol indul? (y/n)";
+			cin >> defstate;
+		} while (defstate != 'y' && defstate != 'n');
+
+		//cellak bekerese
+		if (defstate == 'n') {
 
 			system("cls");
 			//tabla rajzolasa, hogy lassa mit hova akar tenni
@@ -177,13 +192,13 @@ int main(int argc, char *argv[]) {
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {
 					if (j == 0) { //elso oszlop
-						if (i < 9) { if (table.getcellstate(i, j)) { cout << i + 1 << " |O |"; } else { cout << i + 1 << " |_ |"; } }
-						else { if (table.getcellstate(i, j)) { cout << i + 1 << "|O |"; } else { cout << i + 1 << "|_ |"; } }
+						if (i < 9) { if (table->getcellstate(i, j)) { cout << i + 1 << " |O |"; } else { cout << i + 1 << " |_ |"; } }
+						else { if (table->getcellstate(i, j)) { cout << i + 1 << "|O |"; } else { cout << i + 1 << "|_ |"; } }
 					}
 					else {
 
-						if (j == width - 1) { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
-						else { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+						if (j == width - 1) { if (table->getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+						else { if (table->getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
 					}
 				}cout << endl;
 			}
@@ -196,7 +211,7 @@ int main(int argc, char *argv[]) {
 				c.x = c.x - 1;
 				c.y = c.y - 1;
 
-				if (c.x >= 0 && c.y >= 0 && c.x < width && c.y < height) { table.cellbeker(c.y, c.x); } // a kilepo koordinatak miatt
+				if (c.x >= 0 && c.y >= 0 && c.x < width && c.y < height) { table->cellbeker(c.y, c.x); } // a kilepo koordinatak miatt
 
 
 				system("cls");
@@ -217,13 +232,13 @@ int main(int argc, char *argv[]) {
 				for (int i = 0; i < height; i++) {
 					for (int j = 0; j < width; j++) {
 						if (j == 0) { //elso oszlop
-							if (i < 9) { if (table.getcellstate(i, j)) { cout << i + 1 << " |O |"; } else { cout << i + 1 << " |_ |"; } }
-							else { if (table.getcellstate(i, j)) { cout << i + 1 << "|O |"; } else { cout << i + 1 << "|_ |"; } }
+							if (i < 9) { if (table->getcellstate(i, j)) { cout << i + 1 << " |O |"; } else { cout << i + 1 << " |_ |"; } }
+							else { if (table->getcellstate(i, j)) { cout << i + 1 << "|O |"; } else { cout << i + 1 << "|_ |"; } }
 						}
 						else {
 
-							if (j == width - 1) { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
-							else { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+							if (j == width - 1) { if (table->getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+							else { if (table->getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
 						}
 					}cout << endl;
 				}
@@ -241,16 +256,15 @@ int main(int argc, char *argv[]) {
 			system("cls");
 			cout << "Nezze a masik ablakot!";
 		}
-		
+		else { table->glider(); }
 	}
-	else { table.glider(); }
 
 	/* SDL inicializálása és ablak megnyitása */
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		SDL_Log("Nem indithato az SDL: %s", SDL_GetError());
 		exit(1);
 	}
-
+	
 	SDL_Window *window = SDL_CreateWindow("Game of Life", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, height * 10, width * 10, 0);
 	if (window == NULL) {
 		SDL_Log("Nem hozhato letre az ablak: %s", SDL_GetError());
@@ -265,24 +279,25 @@ int main(int argc, char *argv[]) {
 
 	drawGrid(renderer, height * 10, width * 10);
 	SDL_RenderPresent(renderer);
-
+	
 	bool run = true; //fut-e magatol
 	bool step;	//leptetes
 
-	SDL_RenderClear(renderer);
+	//SDL_RenderClear(renderer);
 	/* ez ketyeg, varunk a kilepesre */
 	int count = 0;
-
+	
+	//main while
 	while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
 
 		if (run) { //magatol megy 
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 			SDL_RenderClear(renderer);
 			drawGrid(renderer, height * 10, width * 10);
-			drawCells(renderer, table.gettable(), height, width);
+			drawCells(renderer, table->gettable(), height, width);
 			SDL_RenderPresent(renderer);
-			table.evol();
-			SDL_Delay(100);
+			table->evol();
+			SDL_Delay(500);
 		}
 
 		switch (ev.type) { //pause vagy leptetes
@@ -298,9 +313,9 @@ int main(int argc, char *argv[]) {
 					SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 					SDL_RenderClear(renderer);
 					drawGrid(renderer, height * 10, width * 10);
-					drawCells(renderer, table.gettable(), height, width);
+					drawCells(renderer, table->gettable(), height, width);
 					SDL_RenderPresent(renderer);
-					table.evol();
+					table->evol();
 					SDL_Delay(100);
 				}
 			}
