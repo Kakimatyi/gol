@@ -4,6 +4,7 @@
 #include<sstream>
 #include <math.h>
 #include <stdlib.h>
+//#include<fstream>
 #include<iostream>
 #include <windows.h>
 #include<vector>
@@ -89,7 +90,7 @@ struct coord {
 };
 
 istream& operator>>(istream &is, coord &c) {
-	int szam;
+	// int szam;
 	bool xjon=true;
 	is >> c.x;
 	is >> c.y;
@@ -100,7 +101,7 @@ int main(int argc, char *argv[]) {
 	SDL_Event ev; //mar a menu is hasznalja azert van itt
 
 	//pályaméret, és kezdeti állapot bekérése
-	char defsize, defstate;
+	char defsize, defstate, iffile;
 	int height, width;
 
 	cout << "Game of Life" << endl << endl;
@@ -123,6 +124,28 @@ int main(int argc, char *argv[]) {
 
 	grid table(height, width); //ha akrja ezt lehet atirni azert itt, mert itt mar tud meretet
 	
+
+	//filebol allapot
+	do { cout << "Palya file-bol beolvasasa? (palya.txt) (y/n)"; 
+	
+	cin >> iffile;
+	} while (iffile != 'y' && iffile != 'n');
+
+	if (iffile) {
+		ifstream file;
+		file.open("palya.txt");
+		if (file.is_open()) {
+			string beolvas;
+
+			while (!file.eof()) {
+				file >> beolvas;
+			}
+			cout <<endl<< file<<;
+		}
+		else { cout << "palya.txt nem talalhato a program mappajaban"; }
+	}
+
+	}
 
 	//kezdeti allapot valasztas
 	do {
@@ -214,6 +237,8 @@ int main(int argc, char *argv[]) {
 			system("cls");
 			cout << "Nezze a masik ablakot!";
 	}
+	else { table.glider(); }
+
 
 
 	/* SDL inicializálása és ablak megnyitása */
@@ -244,6 +269,8 @@ int main(int argc, char *argv[]) {
 		/* ez ketyeg, varunk a kilepesre */
 	 int count = 0;
 
+
+	 
 	while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
 
 		if (run) { //magatol megy 
