@@ -103,7 +103,7 @@ int main(int argc, char *argv[]) {
 
 	grid *table=NULL; // igy az ifeken belul is lehet peldanyositani
 
-	cout << "Game of Life" << endl << endl;
+	cout << "Game of Life" << endl << endl<<"Iranyitas"<<endl;
 	cout << "Space - pause" << endl << "jobbra nyil (->) leptet" << endl << endl;
 
 	do {
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
 		} while (defsize != 'y' && defsize != 'n');
 
 		if (defsize == 'n') {
-			cout << "Adja meg a palya mereteit!" << endl;
+			cout << "Adja meg a palya mereteit (legalabb 10x10)!" << endl;
 
 			cout << "magassag: ";
 			cin >> height;
@@ -163,8 +163,8 @@ int main(int argc, char *argv[]) {
 			cin >> width;
 		}
 		else { height = 20; width = 20; } //habar van def constr 20x20-as tablaval, igy egyszerubb
-		table = new grid(height, width); //igy ha beolvas akkor ezt lehet torolni ha mar nem kell
-
+		try { table = new grid(height, width); }//igy ha beolvas akkor ezt lehet torolni ha mar nem kell
+		catch (exception &e) { cout << stderr << " " << e.what(); return 1; }
 		//kezdeti allapot valasztas
 		do {
 			cout << "Az alapertelmezett allapotbol indul? (y/n)";
@@ -288,7 +288,7 @@ int main(int argc, char *argv[]) {
 	int count = 0;
 	
 	//main while
-	while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
+	/*while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
 
 		if (run) { //magatol megy 
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
@@ -297,31 +297,31 @@ int main(int argc, char *argv[]) {
 			drawCells(renderer, table->gettable(), height, width);
 			SDL_RenderPresent(renderer);
 			table->evol();
-			SDL_Delay(500);
+			SDL_Delay(200);
 		}
 
 		switch (ev.type) { //pause vagy leptetes
 		case SDL_KEYDOWN:
 			switch (ev.key.keysym.sym)
 			{
-			case SDLK_SPACE: { //beallitja a run boolt
-				if (run) { run = false; }
-				else { run = true; }//ha space bill lenyomva, run flipstate
-			}
-			case SDLK_RIGHT: {
-				if (!run) {
-					SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-					SDL_RenderClear(renderer);
-					drawGrid(renderer, height * 10, width * 10);
-					drawCells(renderer, table->gettable(), height, width);
-					SDL_RenderPresent(renderer);
-					table->evol();
-					SDL_Delay(100);
+				case SDLK_SPACE: { //beallitja a run boolt
+					if (run) { run = false; }
+					else { run = true; }//ha space bill lenyomva, run flipstate
+				}
+				case SDLK_RIGHT: {
+					if (!run) {
+						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+						SDL_RenderClear(renderer);
+						drawGrid(renderer, height * 10, width * 10);
+						drawCells(renderer, table->gettable(), height, width);
+						SDL_RenderPresent(renderer);
+						table->evol();
+						SDL_Delay(50);
+					}
 				}
 			}
-			}
 		}
-	}
+	}*/
 
 	//ez simán fut
 	/*while(1){
@@ -339,20 +339,46 @@ int main(int argc, char *argv[]) {
 
 	/* ablak bezarasa */
 	SDL_Quit();
-	/////////////////////////////////////////////////////////////////////////////////// konzolos kiírás
+	/////////////////////////////////////////////////////////////////////////////////// tesztelo
 
 
-		/*int a, b;
+		int a, b;
+		cout << "palya meretek ket szam: ";
 		cin >> a >> b;
 		grid tabla;
+		cout << "default tabla:" << endl;
+		tabla.print();
+		
+		cout << endl << "meretes tabla:" << endl;
+		try { grid meretestabla(a, b); meretestabla.print(); }
+		catch (exception &e) { cout << stderr << " " << e.what(); return 1; }
 
-		while (1) {
+		cout << endl << "sejt bekeres: " << endl;
+		tabla.cellbeker(1, 1);
+		tabla.print();
+
+		cout << endl<<"";
+
+		
+		
+
+		//konzolos kiiras
+
+		/*while (1) {
 			tabla.print();
 			tabla.evol();
 			Sleep(200);
 			system("CLS");
 		}*/
 
+		cell sejt;
+		//varhato sor: def state utan 0, flipstate utan 1, setstate utan 0
+		cout <<endl<<"sejt teszt getstate "<< sejt.getstate();
+		sejt.flipstate();
+		cout << " " << sejt.getstate();
+		sejt.setstate(0);
+		cout << " " << sejt.getstate();
+		cout << endl;
 
 	return 0;
 }
