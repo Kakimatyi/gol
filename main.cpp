@@ -4,6 +4,7 @@
 #include<sstream>
 #include <math.h>
 #include <stdlib.h>
+#include<fstream>
 #include<iostream>
 #include <windows.h>
 #include<vector>
@@ -16,13 +17,10 @@ using namespace std;
 
 /*//////////////
 game of life rules
-
 	Any live cell with two or three live neighbours survives.
 Any dead cell with three live neighbours becomes a live cell.
 Cells with less than two or more than 3 neighbours die
 	All other live cells die in the next generation.Similarly, all other dead cells stay dead.
-
-
 /////////////*/
 
 //SDL fuggvenyek kifejtese
@@ -51,7 +49,7 @@ void drawGrid(SDL_Renderer *r, int SCREEN_WIDTH, int SCREEN_HEIGHT) {
 void drawCells(SDL_Renderer *r, cell **table, int height, int width) {
 	// Define cell width/height
 	SDL_Rect cell;
-	cell.w = CELL_SIZE; 
+	cell.w = CELL_SIZE;
 	cell.h = CELL_SIZE;
 
 	// elo cellak kirajzolasa
@@ -70,8 +68,8 @@ void drawCells(SDL_Renderer *r, cell **table, int height, int width) {
 			}
 		}
 	}
-	if (!hope) { 
-		SDL_Delay(60000); 
+	if (!hope) {
+		SDL_Delay(60000);
 		SDL_Quit();
 	} // egy percig var utana bezarja
 }
@@ -90,7 +88,7 @@ struct coord {
 
 istream& operator>>(istream &is, coord &c) {
 	int szam;
-	bool xjon=true;
+	bool xjon = true;
 	is >> c.x;
 	is >> c.y;
 	return is;
@@ -100,11 +98,18 @@ int main(int argc, char *argv[]) {
 	SDL_Event ev; //mar a menu is hasznalja azert van itt
 
 	//pályaméret, és kezdeti állapot bekérése
-	char defsize, defstate;
+	char defsize, defstate, iffile;
 	int height, width;
 
 	cout << "Game of Life" << endl << endl;
-	cout << "Space - pause" << endl << "jobbra nyil (->) leptet"<<endl<<endl;
+	cout << "Space - pause" << endl << "jobbra nyil (->) leptet" << endl << endl;
+
+	do {
+		cout << "Filebol beolvasott allapotbol indul? (palya.txt) (y/n)";
+		cin >> iffile;
+	} while (iffile != 'y' && iffile != 'n');
+
+	
 	//palya valasztas
 	do {
 		cout << "Az alapertelmezett (20x20) palyamerettel jatszik? (y/n)";
@@ -119,10 +124,8 @@ int main(int argc, char *argv[]) {
 		cout << "szelesseg: ";
 		cin >> width;
 	}
-	else { height = 20; width = 20;} //habar van def constr 20x20-as tablaval, igy egyszerubb
-
+	else { height = 20; width = 20; } //habar van def constr 20x20-as tablaval, igy egyszerubb
 	grid table(height, width); //ha akrja ezt lehet atirni azert itt, mert itt mar tud meretet
-	
 
 	//kezdeti allapot valasztas
 	do {
@@ -132,46 +135,30 @@ int main(int argc, char *argv[]) {
 
 	//cellak bekerese
 	if (defstate == 'n') {
-		system("cls");
-		//tabla rajzolasa, hogy lassa mit hova akar tenni
-		for (int k = 0; k < width; k++) {
 
-			if (k < 9) {
-				if (k == 0) { cout << "   " << k + 1 << "  "; }
-				else { cout << k + 1 << "  "; }
-			}
-			else {
-				cout << k + 1 << " ";
-			}
-		}
-		cout << endl;
+		if (iffile == 'y') {
+			ifstream file;
+			file.open("palya.txt");
 
-		//fontos, hogy table[y][x] fordittot koordinatazas van
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				if (j == 0) { //elso oszlop
-					if (i < 9) { if (table.getcellstate(i, j)) { cout << i + 1 << " |O |"; } else { cout << i + 1 << " |_ |"; } }
-					else { if (table.getcellstate(i, j)) { cout << i + 1 << "|O |"; } else { cout << i + 1 << "|_ |"; } }
+			if (file.is_open()) {
+				cout << "kurva";
+				string beolvas;
+
+				int sor = 0;
+				//eloszor lemeri a palya mereteket beolvasassal
+				while (!file.eof()) {
+					file >> beolvas;
+					sor++;
 				}
-				else {
 
-					if (j == width - 1) { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
-					else { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
-				}
-			}cout << endl;
+				height = sor; width=beolvas.size();
+				
+
+			}
+			else { cout << "palya.txt nem talalhato a program mappajaban"; }
 		}
-			cout << endl << "Irja be az eleszteni kivant sejt koordinatait (befejezes tablan kivuli koordinataval)\n";
-			coord c;
+		else {
 
-			do { 
-				//koord beir
-				cin >> c; 
-				c.x = c.x - 1;
-				c.y = c.y - 1;
-
-				if (c.x >= 0 && c.y >= 0 && c.x < width && c.y < height){ table.cellbeker(c.y, c.x); } // a kilepo koordinatak miatt
-				
-				
 			system("cls");
 			//tabla rajzolasa, hogy lassa mit hova akar tenni
 			for (int k = 0; k < width; k++) {
@@ -190,7 +177,7 @@ int main(int argc, char *argv[]) {
 			for (int i = 0; i < height; i++) {
 				for (int j = 0; j < width; j++) {
 					if (j == 0) { //elso oszlop
-						if (i < 9) { if (table.getcellstate(i,j)) { cout <<i+1<< " |O |"; } else { cout << i + 1 << " |_ |"; } }
+						if (i < 9) { if (table.getcellstate(i, j)) { cout << i + 1 << " |O |"; } else { cout << i + 1 << " |_ |"; } }
 						else { if (table.getcellstate(i, j)) { cout << i + 1 << "|O |"; } else { cout << i + 1 << "|_ |"; } }
 					}
 					else {
@@ -200,29 +187,71 @@ int main(int argc, char *argv[]) {
 					}
 				}cout << endl;
 			}
+			cout << endl << "Irja be az eleszteni kivant sejt koordinatait (befejezes tablan kivuli koordinataval)\n";
+			coord c;
 
-			cout << endl << "Irja be az eleszteni kivant sejt koordinatait (befejezes tablan kivuli koordinataval\n";
+			do {
+				//koord beir
+				cin >> c;
+				c.x = c.x - 1;
+				c.y = c.y - 1;
 
-			} while (c.x >= 0 && c.y>=0 && c.x < width && c.y < height);
+				if (c.x >= 0 && c.y >= 0 && c.x < width && c.y < height) { table.cellbeker(c.y, c.x); } // a kilepo koordinatak miatt
+
+
+				system("cls");
+				//tabla rajzolasa, hogy lassa mit hova akar tenni
+				for (int k = 0; k < width; k++) {
+
+					if (k < 9) {
+						if (k == 0) { cout << "   " << k + 1 << "  "; }
+						else { cout << k + 1 << "  "; }
+					}
+					else {
+						cout << k + 1 << " ";
+					}
+				}
+				cout << endl;
+
+				//fontos, hogy table[y][x] fordittot koordinatazas van
+				for (int i = 0; i < height; i++) {
+					for (int j = 0; j < width; j++) {
+						if (j == 0) { //elso oszlop
+							if (i < 9) { if (table.getcellstate(i, j)) { cout << i + 1 << " |O |"; } else { cout << i + 1 << " |_ |"; } }
+							else { if (table.getcellstate(i, j)) { cout << i + 1 << "|O |"; } else { cout << i + 1 << "|_ |"; } }
+						}
+						else {
+
+							if (j == width - 1) { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+							else { if (table.getcellstate(i, j)) { cout << "O |"; } else { cout << "_ |"; } }
+						}
+					}cout << endl;
+				}
+
+				cout << endl << "Irja be az eleszteni kivant sejt koordinatait (befejezes tablan kivuli koordinataval\n";
+
+			} while (c.x >= 0 && c.y >= 0 && c.x < width && c.y < height);
 
 			cout << "A jatek inditasahoz nyomjon barmilyen gombot!";
 			char y;
 			cin >> y;
 
 			cout << "Loading...";
-			
+
 			system("cls");
 			cout << "Nezze a masik ablakot!";
+		}
+		
 	}
-
+	else { table.glider(); }
 
 	/* SDL inicializálása és ablak megnyitása */
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		SDL_Log("Nem indithato az SDL: %s", SDL_GetError());
 		exit(1);
 	}
-	
-	SDL_Window *window = SDL_CreateWindow("Game of Life", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, height*10, width*10, 0);
+
+	SDL_Window *window = SDL_CreateWindow("Game of Life", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, height * 10, width * 10, 0);
 	if (window == NULL) {
 		SDL_Log("Nem hozhato letre az ablak: %s", SDL_GetError());
 		exit(1);
@@ -234,15 +263,15 @@ int main(int argc, char *argv[]) {
 	}
 	SDL_RenderClear(renderer);
 
-	drawGrid(renderer, height*10, width*10);
+	drawGrid(renderer, height * 10, width * 10);
 	SDL_RenderPresent(renderer);
-	
-	bool run=true; //fut-e magatol
+
+	bool run = true; //fut-e magatol
 	bool step;	//leptetes
-	
+
 	SDL_RenderClear(renderer);
-		/* ez ketyeg, varunk a kilepesre */
-	 int count = 0;
+	/* ez ketyeg, varunk a kilepesre */
+	int count = 0;
 
 	while (SDL_WaitEvent(&ev) && ev.type != SDL_QUIT) {
 
@@ -256,59 +285,58 @@ int main(int argc, char *argv[]) {
 			SDL_Delay(100);
 		}
 
-		switch (ev.type){ //pause vagy leptetes
+		switch (ev.type) { //pause vagy leptetes
 		case SDL_KEYDOWN:
 			switch (ev.key.keysym.sym)
 			{
-				case SDLK_SPACE: { //beallitja a run boolt
-					if (run) { run = false; }
-					else { run = true; }//ha space bill lenyomva, run flipstate
-				}
-				case SDLK_RIGHT: {
-					if (!run) {
-						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-						SDL_RenderClear(renderer);
-						drawGrid(renderer, height * 10, width * 10);
-						drawCells(renderer, table.gettable(), height, width);
-						SDL_RenderPresent(renderer);
-						table.evol();
-						SDL_Delay(100);
-					}
+			case SDLK_SPACE: { //beallitja a run boolt
+				if (run) { run = false; }
+				else { run = true; }//ha space bill lenyomva, run flipstate
+			}
+			case SDLK_RIGHT: {
+				if (!run) {
+					SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+					SDL_RenderClear(renderer);
+					drawGrid(renderer, height * 10, width * 10);
+					drawCells(renderer, table.gettable(), height, width);
+					SDL_RenderPresent(renderer);
+					table.evol();
+					SDL_Delay(100);
 				}
 			}
-		}		
+			}
+		}
 	}
 
-		//ez simán fut
-		/*while(1){
-			// Set screen colour to white
-			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+	//ez simán fut
+	/*while(1){
+		// Set screen colour to white
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+		// Render white to screen (clear screen)
+		SDL_RenderClear(renderer);
 
-			// Render white to screen (clear screen)
-			SDL_RenderClear(renderer);
-			
-			drawGrid(renderer, height*10, width*10);
-			drawCells(renderer, table.gettable(), height, width);
-			SDL_RenderPresent(renderer);
-			table.evol();
-			SDL_Delay(80);
-		}*/
-		
+		drawGrid(renderer, height*10, width*10);
+		drawCells(renderer, table.gettable(), height, width);
+		SDL_RenderPresent(renderer);
+		table.evol();
+		SDL_Delay(80);
+	}*/
+
 	/* ablak bezarasa */
 	SDL_Quit();
-/////////////////////////////////////////////////////////////////////////////////// konzolos kiírás
+	/////////////////////////////////////////////////////////////////////////////////// konzolos kiírás
 
 
-	/*int a, b;
-	cin >> a >> b;
-	grid tabla;
-	
-	while (1) {
-		tabla.print();
-		tabla.evol();
-		Sleep(200);
-		system("CLS");
-	}*/
+		/*int a, b;
+		cin >> a >> b;
+		grid tabla;
+
+		while (1) {
+			tabla.print();
+			tabla.evol();
+			Sleep(200);
+			system("CLS");
+		}*/
 
 
 	return 0;

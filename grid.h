@@ -67,16 +67,17 @@ public:
 				table[i][j] = nullsejt; //alapbol halott sejtet rak bele, feltolti nullakkal a tablat
 			}
 		}
+	}
 
-		//glider betöltése
+	//glider betöltése
+	void glider() {
 		int glidarr[3][3] = { 1,1,1,1,0,0,0,1,0 };
 
-			/*for (int i = 0; i < 3; i++) { 
-				for (int j = 0; j < 3; j++) {
-					table[2 - i][2 - j].setstate(glidarr[i][j]);
-				}
-			}*/
-
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				table[2 - i][2 - j].setstate(glidarr[i][j]);
+			}
+		}
 	}
 
 	~grid() {
