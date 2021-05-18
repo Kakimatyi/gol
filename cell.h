@@ -16,7 +16,7 @@ public:
 	cell() { state = 0; }
 	//~cell() { }
 
-	bool getstate()const { return state; }
+	bool getstate() const { return state; }
 	void setstate(bool newstate) { state = newstate; }
 	void flipstate(){
 		if (state) { setstate(0); }

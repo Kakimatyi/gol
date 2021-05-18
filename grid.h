@@ -45,14 +45,15 @@ public:
 		//glider betöltése
 		int glidarr[3][3] = { 1,1,1,1,0,0,0,1,0 };
 
-		for (int i = 0; i < 3; i++) {
+		/*for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				table[2 - i][2 - j].setstate(glidarr[i][j]);
 			}
-		}
+		}*/
 	}
 
 	grid(int h, int w) {
+		if (h < 10 || w < 10) { throw domain_error("tul kicsiny palyameret");}
 		height = h;
 		width = w;
 
@@ -87,8 +88,6 @@ public:
 		delete[] table;
 	}
 
-	//glider jobb alsó sarkának kezdeti pozi megadása
-	// ehhez lehet kivételkezelést írni
 	/*void gliderbonyi(vector<cell> cells, int glidx, int glidy); //a vektorba betolt egy 3x3 as cells-t glider alakban*/
 
 	/*void printcells(vector<cell> cells, int height, int width) const {

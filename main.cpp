@@ -94,6 +94,57 @@ istream& operator>>(istream &is, coord &c) {
 	return is;
 }
 
+int tesztelo() {
+	int a, b;
+	cout << "palya meretek ket szam: ";
+	cin >> a >> b;
+	grid tabla;
+	cout << "default tabla (20x20):" << endl;
+	tabla.print();
+
+	cout << endl << "meretes tabla:" << endl;
+	try { grid meretestabla(a, b); meretestabla.print(); }
+	catch (exception &e) { cout << stderr << " " << e.what(); return 1; }
+
+	cout << endl << "sejt bekeres: " << endl;
+
+	tabla.cellbeker(10, 10);
+	tabla.print();
+
+	cout << endl << "gettable teszt" << endl;
+	cell** masolat = tabla.gettable();
+	cout << masolat[10][10].getstate(); //ez lett 1 a cellbeker miatt 
+
+	cout << endl << "getcellstate" << endl;
+	cout << tabla.getcellstate(10, 10);
+
+	cout << endl << "glider berakasa" << endl;
+	tabla.glider();
+	tabla.print();
+
+	grid masik;
+	cout << endl << "masik" << endl;
+	//cout << masik;
+
+	//konzolos kiiras
+	/*while (1) {
+		tabla.print();
+		tabla.evol();
+		Sleep(200);
+		system("CLS");
+	}*/
+
+
+	cell sejt;
+	//varhato sor: def state utan 0, flipstate utan 1, setstate utan 0
+	cout << endl << "sejt teszt getstate " << sejt.getstate();
+	sejt.flipstate();
+	cout << " " << sejt.getstate();
+	sejt.setstate(0);
+	cout << " " << sejt.getstate();
+	cout << endl;
+}
+
 int main(int argc, char *argv[]) {
 	SDL_Event ev; //mar a menu is hasznalja azert van itt
 
@@ -342,43 +393,7 @@ int main(int argc, char *argv[]) {
 	/////////////////////////////////////////////////////////////////////////////////// tesztelo
 
 
-		int a, b;
-		cout << "palya meretek ket szam: ";
-		cin >> a >> b;
-		grid tabla;
-		cout << "default tabla:" << endl;
-		tabla.print();
-		
-		cout << endl << "meretes tabla:" << endl;
-		try { grid meretestabla(a, b); meretestabla.print(); }
-		catch (exception &e) { cout << stderr << " " << e.what(); return 1; }
-
-		cout << endl << "sejt bekeres: " << endl;
-		tabla.cellbeker(1, 1);
-		tabla.print();
-
-		cout << endl<<"";
-
-		
-		
-
-		//konzolos kiiras
-
-		/*while (1) {
-			tabla.print();
-			tabla.evol();
-			Sleep(200);
-			system("CLS");
-		}*/
-
-		cell sejt;
-		//varhato sor: def state utan 0, flipstate utan 1, setstate utan 0
-		cout <<endl<<"sejt teszt getstate "<< sejt.getstate();
-		sejt.flipstate();
-		cout << " " << sejt.getstate();
-		sejt.setstate(0);
-		cout << " " << sejt.getstate();
-		cout << endl;
-
+	tesztelo();
+			
 	return 0;
 }
