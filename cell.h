@@ -3,7 +3,6 @@
 #include<iostream>
 using namespace std;
 
-
 //osztaly a sejtek koordinatainak tarolasara egyedileg
 
 class cell
@@ -21,13 +20,11 @@ public:
 	void flipstate(){
 		if (state) { setstate(0); }
 		else { setstate(1); }
-
 	}
 
 	/*void operatorprint(ostream &os) const {
 		os << state;
 	}*/
-
 }; 
 #endif
 /*ostream & operator<<(ostream &os, const cell c) {

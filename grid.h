@@ -1,14 +1,14 @@
-#ifndef GRID_H
-#define GRID_H
+//#ifndef GRID_H
+//#define GRID_H
 
 #include"cell.h"
-#include<vector>
+//#include<vector>
 #include<iostream>
 
 using namespace std;
 
-// itt vannak példányosítva a sejtek, és kapnak értéket az elején
-// a tábla feltöltése értékekkel (1/0)
+// itt vannak peldanyositva a sejtek egy 2D dinamikus tombbe, és kapnak erteket az elejen
+// a tabla feltoltese ertekekkel (1/0)
 class grid
 {
 
@@ -24,8 +24,17 @@ public:
 		return table;
 	}
 
+	//tabla meretek visszaadasa
+	int getheight() const{
+		return height;
+	}
+
+	int getwidth() const{
+		return width;
+	}
+
 	//2d tomb ami a palya lesz, ebben a tombben lesznek tarolva az egyes cellak peldanyai 2d-ben
-	//default constructor 20x20 palya gliderrel a felso sarokban
+	//default constructor 20x20 palya uresen
 	grid() {
 		height = 20;
 		width = 20;
@@ -41,19 +50,10 @@ public:
 				table[i][j] = nullsejt; //alapbol halott sejtet rak bele, feltolti nullakkal a tablat
 			}
 		}
-
-		//glider betöltése
-		int glidarr[3][3] = { 1,1,1,1,0,0,0,1,0 };
-
-		/*for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 3; j++) {
-				table[2 - i][2 - j].setstate(glidarr[i][j]);
-			}
-		}*/
 	}
 
 	grid(int h, int w) {
-		if (h < 10 || w < 10) { throw domain_error("tul kicsiny palyameret");}
+		if (h < 10 || w < 10) { throw domain_error("nem megfelelo palyameret");}
 		height = h;
 		width = w;
 
@@ -70,7 +70,7 @@ public:
 		}
 	}
 
-	//glider betöltése
+	//glider betoltese a tabla bal felso sarkaba
 	void glider() {
 		int glidarr[3][3] = { 1,1,1,1,0,0,0,1,0 };
 
@@ -81,41 +81,28 @@ public:
 		}
 	}
 
+	//tabla torlese
 	~grid() {
-		for (int i = 0; i < width; ++i) {
+		for (int i = 0; i < width; i++) {
 			delete[] table[i];
 		}
 		delete[] table;
 	}
 
-	/*void gliderbonyi(vector<cell> cells, int glidx, int glidy); //a vektorba betolt egy 3x3 as cells-t glider alakban*/
-
-	/*void printcells(vector<cell> cells, int height, int width) const {
-
-		for (int i = 0; i < height; i++) {
-			for (int j = 0; j < width; j++) {
-				for (int k = 0; k < cells.size(); k++) {
-					if (cells[k].getx() == j && cells[k].gety() == i) {
-						if (cells[k].getstate()) { cout << "1"; }
-					}
-					else cout << "0";
-				}
-			}
-		}
-	}*/
-
-	void evolfun(vector<cell> cells, int height, int width);
-
-	//evolfun 2d tombre
+	//szabalyok alapjan valtoztatas az allapotokon
 	void evol(); 
 
-	void operatorprint(ostream &os)const{
+	void operatorprint(ostream &os)const {
+
+		
 		for (int i = 0; i < height; i++) {
 			for (int j = 0; j < width; j++) {
 				os << table[i][j].getstate();
+				if(table[i][j].getstate()!=1 && table[i][j].getstate()!=0){ throw domain_error("wrong cell state"); }
 			}os << endl;
 		}
 	}
+
 
 	void print()const {
 		for (int i = 0; i < height; i++) {
@@ -125,8 +112,8 @@ public:
 		}
 	}
 
-	//igy nem kell egy masolatot csinalnunk rola tabla1=table.gettable()-lel, amit minden korbe le kell frissiteni az eredetirol
-	bool getcellstate(int x, int y) {
+	//csak egy cella allapotat adja vissza, igy nem kell egy masolatot csinalnunk rola tabla1=table.gettable()-lel, amit minden korbe le kell frissiteni az eredetirol
+	bool getcellstate (int x, int y) const{
 		return table[x][y].getstate();
 	}
 
@@ -134,6 +121,5 @@ public:
 		table[x][y].setstate(1);
 	}
 };
+//#endif
 
-
-#endif
