@@ -71,9 +71,9 @@ void drawCells(SDL_Renderer *r, cell **table, int height, int width) {
 		}
 	}
 	if (!hope) {
-		//SDL_Delay(6000);
+		
 		SDL_Quit();
-	} // egy percig var utana bezarja
+	} // ha mar nincs elo cella, bezarja az ablakot
 }
 
 //user eventet general, hogy akkor is fusson, mikor nem nyul hozza
@@ -152,14 +152,9 @@ int tesztelo() {
 	tabla.glider();
 	tabla.print();
 
-	cout << endl << " << operator tesztelese" << endl;
-
-	grid *optabla;
-	optabla = new grid(10, 10);
-
-	grid tablaki(20,20);
-	try { cout << tablaki; }
-	catch (exception &e) { cout << stderr << " " << e.what(); return 1; }
+	
+	/*try { cout << optabla; }
+	catch (exception &e) { cout << stderr << " " << e.what(); return 1; }*/
 }
 
 
@@ -216,6 +211,7 @@ int main(int argc, char *argv[]) {
 				}
 				sor++;
 			}
+			file.close();
 		}
 		else { cout << "palya.txt nem talalhato a program mappajaban"; }
 	}
@@ -300,6 +296,7 @@ int main(int argc, char *argv[]) {
 		else { table->glider(); }
 	}
 
+
 	/* SDL inicializálása és ablak megnyitása */
 	if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
 		SDL_Log("Nem indithato az SDL: %s", SDL_GetError());
@@ -317,13 +314,14 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 	SDL_RenderClear(renderer);
-
-	drawGrid(renderer, table->getheight() * 10, table->getwidth() * 10);
-	SDL_RenderPresent(renderer);
 	
+	//drawGrid(renderer, table->getheight() * 10, table->getwidth() * 10);
+	//SDL_RenderPresent(renderer);
+	
+
 	bool run = true; //fut-e magatol
 	bool step;	//leptetes
-
+	
 	
 	/* ez ketyeg, varunk a kilepesre */
 	
@@ -333,7 +331,7 @@ int main(int argc, char *argv[]) {
 		if (run) { //magatol megy 
 			SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 			SDL_RenderClear(renderer);
-			drawGrid(renderer, table->getheight() * 10, table->getwidth() * 10);
+			drawGrid(renderer, table->getheight() * CELL_SIZE, table->getwidth() * CELL_SIZE);
 			drawCells(renderer, table->gettable(), table->getheight(), table->getwidth());
 			SDL_RenderPresent(renderer);
 			table->evol();
@@ -353,7 +351,7 @@ int main(int argc, char *argv[]) {
 					if (!run) {
 						SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 						SDL_RenderClear(renderer);
-						drawGrid(renderer, table->getheight() * 10, table->getwidth() * 10);
+						drawGrid(renderer, table->getheight() * CELL_SIZE, table->getwidth() * CELL_SIZE);
 						drawCells(renderer, table->gettable(), table->getheight(), table->getwidth());
 						SDL_RenderPresent(renderer);
 						table->evol();
@@ -369,8 +367,14 @@ int main(int argc, char *argv[]) {
 
 	/* ablak bezarasa */
 	SDL_Quit();
+	delete table;
+	//tabla pointer torlese
 
-	//tesztelo();
+	/*tesztelo();
+	cout << endl << " << operator tesztelese" << endl;
 	
+	grid tablaki(11, 11);
+	cout << tablaki;
+	*/
 	return 0;
 }
